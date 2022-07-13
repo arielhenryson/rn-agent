@@ -7,17 +7,17 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type ExampleRouter struct {
+type AppRouter struct {
 	*mux.Router
 }
 
-func NewRouter() *ExampleRouter {
+func NewRouter() *AppRouter {
 	r := mux.NewRouter()
 
 	fs := http.FileServer(http.Dir("./web"))
 	r.PathPrefix("/").Handler(fs)
 
-	return &ExampleRouter{
+	return &AppRouter{
 		Router: r,
 	}
 }

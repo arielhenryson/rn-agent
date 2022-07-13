@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rn-agent
+  labels:
+    app: rn-agent
+spec:
+  selector:
+    matchLabels:
+      app: rn-agent
+  template:
+    metadata:
+      labels:
+        app: rn-agent
+    spec:
+      containers:
+      - name: rn-agent
+        image: rn-agent-image
+        ports:
+        - containerPort: 8000

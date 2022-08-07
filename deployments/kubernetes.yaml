@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rn-agent
+  labels:
+    app: rn-agent
+spec:
+  selector:
+    matchLabels:
+      app: rn-agent
+  template:
+    metadata:
+      labels:
+        app: rn-agent
+    spec:
+      serviceAccountName: virtual-kubelet
+      containers:
+      - name: rn-agent
+        image: rn-agent-image
+#        env:
+#          - name: APISERVER_CERT_LOCATION
+#            value: "./crt/vkubelet-mock-0-crt.pem"
+#          - name: APISERVER_KEY_LOCATION
+#            value: "./crt/vkubelet-mock-0-key.pem"
+        ports:
+        - containerPort: 8000
+        - containerPort: 2345
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: virtual-kubelet
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: virtual-kubelet
+rules:
+  - apiGroups: [ '*' ]
+    resources: [ '*' ]
+    verbs: [ '*' ]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: virtual-kubelet
+subjects:
+  - kind: ServiceAccount
+    name: virtual-kubelet
+    namespace: default
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: virtual-kubelet
